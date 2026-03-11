@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="GI/GI.vcxproj" Id="5b5e2556-9907-45e4-a0e4-42b1f0887b07" />
+</Solution>
