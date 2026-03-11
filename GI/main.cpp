@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 int main() {
-    lve::FirstApp app{};
+    Application app{};
 
     try {
         app.run();

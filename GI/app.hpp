@@ -9,31 +9,29 @@
 #include <memory>
 #include <vector>
 
-namespace lve {
-	class FirstApp {
-	public:
-		static constexpr int WIDTH = 800;
-		static constexpr int HEIGHT = 600;
+class Application {
+public:
+	static constexpr int WIDTH = 800;
+	static constexpr int HEIGHT = 600;
 
-		FirstApp();
-		~FirstApp();
+	Application();
+	~Application();
 
-		FirstApp(const FirstApp&) = delete;
-		FirstApp& operator=(const FirstApp&) = delete;
+	Application(const Application&) = delete;
+	Application& operator=(const Application&) = delete;
 
-		void run();
+	void run();
 
-	private:
-		void createPipelineLayout();
-		void createPipeline();
-		void createCommandBuffers();
-		void drawFrame();
+private:
+	void createPipelineLayout();
+	void createPipeline();
+	void createCommandBuffers();
+	void drawFrame();
 
-		LveWindow lveWindow{ WIDTH, HEIGHT, "Hello Vulkan!" };
-		LveDevice lveDevice{ lveWindow };
-		LveSwapChain lveSwapChain{ lveDevice, lveWindow.getExtent() };
-		std::unique_ptr<LvePipeline> lvePipeline;
-		VkPipelineLayout pipelineLayout;
-		std::vector<VkCommandBuffer> commandBuffers;
-	};
-}  // namespace lve
+	Window Window{ WIDTH, HEIGHT, "Hello Vulkan!" };
+	Device Device{ Window };
+	SwapChain SwapChain{ Device, Window.getExtent() };
+	std::unique_ptr<Pipeline> Pipeline;
+	VkPipelineLayout pipelineLayout;
+	std::vector<VkCommandBuffer> commandBuffers;
+};
