@@ -52,7 +52,7 @@ private:
 
     void createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule);
 
-    Device& Device;
+    Device& device;
     VkPipeline graphicsPipeline;
     VkShaderModule vertShaderModule;
     VkShaderModule fragShaderModule;
