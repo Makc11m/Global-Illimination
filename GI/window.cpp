@@ -19,7 +19,7 @@ void Window::initWindow() {
 
     window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
     glfwSetWindowUserPointer(window, this);
-    glfwSetFramebufferSizeCallback(window, framebufferResizedCallback);
+    glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
 void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
@@ -28,7 +28,7 @@ void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
     }
 }
 
-void Window::framebufferResizedCallback(GLFWwindow* cur_window, int width, int height) {
+void Window::framebufferResizeCallback(GLFWwindow* cur_window, int width, int height) {
     auto window = reinterpret_cast<Window *>(glfwGetWindowUserPointer(cur_window));
     window->framebufferResized = true;
     window->width = width;  
