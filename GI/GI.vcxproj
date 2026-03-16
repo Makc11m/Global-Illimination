@@ -228,6 +228,7 @@ echo Shaders compiled successfully</Command>
   <ItemGroup>
     <ClInclude Include="app.hpp" />
     <ClInclude Include="device.hpp" />
+    <ClInclude Include="game_object.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="swap_chain.hpp" />
