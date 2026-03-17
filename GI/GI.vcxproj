@@ -87,8 +87,21 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>@echo off
+REM Создаём папку shaders рядом с exe
+if not exist "$(OutDir)shaders" mkdir "$(OutDir)shaders"
+
+REM Компилируем все вертексные шейдеры
+for %%f in ($(ProjectDir)shaders\*.vert) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+REM Компилируем все фрагментные шейдеры
+for %%f in ($(ProjectDir)shaders\*.frag) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+echo Shaders compiled successfully</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,8 +123,21 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>@echo off
+REM Создаём папку shaders рядом с exe
+if not exist "$(OutDir)shaders" mkdir "$(OutDir)shaders"
+
+REM Компилируем все вертексные шейдеры
+for %%f in ($(ProjectDir)shaders\*.vert) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+REM Компилируем все фрагментные шейдеры
+for %%f in ($(ProjectDir)shaders\*.frag) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+echo Shaders compiled successfully</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -134,8 +160,21 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>@echo off
+REM Создаём папку shaders рядом с exe
+if not exist "$(OutDir)shaders" mkdir "$(OutDir)shaders"
+
+REM Компилируем все вертексные шейдеры
+for %%f in ($(ProjectDir)shaders\*.vert) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+REM Компилируем все фрагментные шейдеры
+for %%f in ($(ProjectDir)shaders\*.frag) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+echo Shaders compiled successfully</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,8 +199,21 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>@echo off
+REM Создаём папку shaders рядом с exe
+if not exist "$(OutDir)shaders" mkdir "$(OutDir)shaders"
+
+REM Компилируем все вертексные шейдеры
+for %%f in ($(ProjectDir)shaders\*.vert) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+REM Компилируем все фрагментные шейдеры
+for %%f in ($(ProjectDir)shaders\*.frag) do (
+    "C:\VulkanSDK\1.4.341.1\Bin\glslc.exe" "%%f" -o "$(OutDir)shaders\%%~nf.spv"
+)
+
+echo Shaders compiled successfully</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -170,8 +222,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
-    <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="swap_chain.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -181,8 +231,6 @@
     <ClInclude Include="game_object.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
-    <ClInclude Include="renderer.hpp" />
-    <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="swap_chain.hpp" />
     <ClInclude Include="window.hpp" />
   </ItemGroup>
