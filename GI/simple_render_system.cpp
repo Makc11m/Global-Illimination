@@ -54,8 +54,8 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
     pipelineConfig.pipelineLayout = pipelineLayout;
     pipeline = std::make_unique<Pipeline>(
         device,
-        "shaders/simple_shader.vert.spv",
-        "shaders/simple_shader.frag.spv",
+        "shaders/vert.spv",
+        "shaders/frag.spv",
         pipelineConfig);
 }
 
@@ -64,7 +64,7 @@ void SimpleRenderSystem::renderGameObjects(
     pipeline->bind(commandBuffer);
 
     for (auto& obj : gameObjects) {
-        obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.01f, glm::two_pi<float>());
+        obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.0005f, glm::two_pi<float>());
 
         SimplePushConstantData push{};
         push.offset = obj.transform2d.translation;

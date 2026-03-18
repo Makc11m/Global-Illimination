@@ -1,4 +1,5 @@
 #include "app.hpp"
+#include "simple_render_system.hpp"
 
 // std
 #include <iostream>
@@ -18,19 +19,19 @@ struct SimplePushConstantData {
 
 Application::Application() {
     loadGameObjects();
-    createPipelineLayout();
-    createPipeline();
 }
 
-Application::~Application() { vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr); }
+Application::~Application() {}
 
 void Application::run() {
+	SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass() };
+
     while (!window.shouldClose()) {
         glfwPollEvents();
 
         if (auto commandBuffer = renderer.beginFrame()) {
 			renderer.beginSwapChainRenderPass(commandBuffer);
-			renderGameObjects(commandBuffer);
+            simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects);
 			renderer.endSwapChainRenderPass(commandBuffer);
 			renderer.endFrame();
 
@@ -53,62 +54,7 @@ void Application::loadGameObjects() {
     triangle.color = {0.1f, 0.8f, 0.1f};
 	triangle.transform2d.translation.x = 0.2f;
     triangle.transform2d.scale = {2.0f, 0.5f};
-    triangle.transform2d.rotation = 0.25f * glm::two_pi<float>();
+    triangle.transform2d.rotation = 0.0025f * glm::two_pi<float>();
 
     gameObjects.push_back(std::move(triangle));
-}
-
-void Application::createPipelineLayout() {
-
-	VkPushConstantRange pushConstantRange{};
-	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-	pushConstantRange.offset = 0;
-	pushConstantRange.size = sizeof(SimplePushConstantData);
-
-    VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-    pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 0;  
-    pipelineLayoutInfo.pSetLayouts = nullptr;
-    pipelineLayoutInfo.pushConstantRangeCount = 1;
-    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
-    if (vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) !=
-        VK_SUCCESS) {
-        throw std::runtime_error("failed to create pipeline layout!");
-    }
-}
-
-void Application::createPipeline() {
-    assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
-
-    PipelineConfigInfo pipelineConfig{};
-    Pipeline::defaultPipelineConfigInfo(pipelineConfig);
-    pipelineConfig.renderPass = renderer.getSwapChainRenderPass();
-    pipelineConfig.pipelineLayout = pipelineLayout;
-    pipeline = std::make_unique<Pipeline>( 
-        device,
-        "shaders/vert.spv",
-        "shaders/frag.spv",
-        pipelineConfig);
-}
-
-void Application::renderGameObjects(VkCommandBuffer commandBuffer) {
-	pipeline->bind(commandBuffer);
-
-    for (auto& obj : gameObjects) {
-		obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.0001f, glm::two_pi<float>());
-
-        SimplePushConstantData push{};
-        push.offset = obj.transform2d.translation;
-        push.color = obj.color;
-        push.transform = obj.transform2d.mat2();
-        vkCmdPushConstants(
-            commandBuffer,
-            pipelineLayout,
-            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-            0,
-            sizeof(SimplePushConstantData),
-            &push);
-        obj.model->bind(commandBuffer);
-        obj.model->draw(commandBuffer);
-    }
 }
