@@ -1,8 +1,8 @@
 #pragma once
 
 #include "device.hpp"
-#include "pipeline.hpp"
 #include "game_object.hpp"
+#include "pipeline.hpp"
 
 // std
 #include <memory>
@@ -23,7 +23,6 @@ private:
 	void createPipeline(VkRenderPass renderPass);
 
 	Device& device;
-
 
 	std::unique_ptr<Pipeline> pipeline;
 	VkPipelineLayout pipelineLayout;

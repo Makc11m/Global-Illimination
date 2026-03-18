@@ -1,17 +1,17 @@
 #include "renderer.hpp"
 
 // std
-#include <iostream>
 #include <array>
+#include <cassert>
 #include <stdexcept>
 
-Renderer::Renderer(Window& init_window, Device& init_device) : window{ init_window }, device{ init_device } {
+Renderer::Renderer(Window& init_window, Device& init_device)
+    : window{ init_window }, device{ init_device } {
     recreateSwapChain();
     createCommandBuffers();
 }
 
 Renderer::~Renderer() { freeCommandBuffers(); }
-
 
 void Renderer::recreateSwapChain() {
     auto extent = window.getExtent();
@@ -31,10 +31,8 @@ void Renderer::recreateSwapChain() {
         if (!oldSwapChain->compareSwapFormats(*swapChain.get())) {
             throw std::runtime_error("Swap chain image(or depth) format has changed!");
         }
-
     }
 }
-
 
 void Renderer::createCommandBuffers() {
     commandBuffers.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -61,10 +59,9 @@ void Renderer::freeCommandBuffers() {
 }
 
 VkCommandBuffer Renderer::beginFrame() {
-	assert(!isFrameStarted && "Cannot call beginFrame while already in progress");
+    assert(!isFrameStarted && "Can't call beginFrame while already in progress");
 
     auto result = swapChain->acquireNextImage(&currentImageIndex);
-
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
         recreateSwapChain();
         return nullptr;
@@ -74,9 +71,9 @@ VkCommandBuffer Renderer::beginFrame() {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
-	isFrameStarted = true;
+    isFrameStarted = true;
 
-	auto commandBuffer = getCurrentCommandBuffer();
+    auto commandBuffer = getCurrentCommandBuffer();
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -87,30 +84,32 @@ VkCommandBuffer Renderer::beginFrame() {
 }
 
 void Renderer::endFrame() {
-    assert(isFrameStarted && "Cannot call endFrame while frame is not in progress");
-	auto commandBuffer = getCurrentCommandBuffer();
-
+    assert(isFrameStarted && "Can't call endFrame while frame is not in progress");
+    auto commandBuffer = getCurrentCommandBuffer();
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
     }
 
     auto result = swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window.wasWindowResized()) {
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
+        window.wasWindowResized()) {
         window.resetWindowResizedFlag();
         recreateSwapChain();
-        return;
     }
-    if (result != VK_SUCCESS) {
+    else if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to present swap chain image!");
     }
 
-	isFrameStarted = false;
-	currentFrameIndex = (currentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
+    isFrameStarted = false;
+    currentFrameIndex = (currentFrameIndex + 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
 }
 
 void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-    assert(isFrameStarted && "Cannot call beginSwapChainRenderPass if frame is not in progress");
-    assert(commandBuffer == getCurrentCommandBuffer() && "Can't begin render pass on command buffer from a different frame");
+    assert(isFrameStarted && "Can't call beginSwapChainRenderPass if frame is not in progress");
+    assert(
+        commandBuffer == getCurrentCommandBuffer() &&
+        "Can't begin render pass on command buffer from a different frame");
+
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = swapChain->getRenderPass();
@@ -138,8 +137,11 @@ void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
     vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 }
+
 void Renderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-    assert(isFrameStarted && "Cannot call endSwapChainRenderPass if frame is not in progress");
-    assert(commandBuffer == getCurrentCommandBuffer() && "Can't end render pass on command buffer from a different frame");
+    assert(isFrameStarted && "Can't call endSwapChainRenderPass if frame is not in progress");
+    assert(
+        commandBuffer == getCurrentCommandBuffer() &&
+        "Can't end render pass on command buffer from a different frame");
     vkCmdEndRenderPass(commandBuffer);
 }

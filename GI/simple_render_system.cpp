@@ -1,12 +1,14 @@
 #include "simple_render_system.hpp"
 
+// libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+
 // std
-#include <iostream>
 #include <array>
+#include <cassert>
 #include <stdexcept>
 
 struct SimplePushConstantData {
@@ -15,15 +17,17 @@ struct SimplePushConstantData {
     alignas(16) glm::vec3 color;
 };
 
-SimpleRenderSystem::SimpleRenderSystem(Device &init_device, VkRenderPass renderPass) : device{ init_device } {
+SimpleRenderSystem::SimpleRenderSystem(Device& init_device, VkRenderPass renderPass)
+    : device{ init_device } {
     createPipelineLayout();
     createPipeline(renderPass);
-}   
+}
 
-SimpleRenderSystem::~SimpleRenderSystem() { vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr); }
+SimpleRenderSystem::~SimpleRenderSystem() {
+    vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
+}
 
 void SimpleRenderSystem::createPipelineLayout() {
-
     VkPushConstantRange pushConstantRange{};
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
     pushConstantRange.offset = 0;
@@ -50,21 +54,23 @@ void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
     pipelineConfig.pipelineLayout = pipelineLayout;
     pipeline = std::make_unique<Pipeline>(
         device,
-        "shaders/vert.spv",
-        "shaders/frag.spv",
+        "shaders/simple_shader.vert.spv",
+        "shaders/simple_shader.frag.spv",
         pipelineConfig);
 }
 
-void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects) {
+void SimpleRenderSystem::renderGameObjects(
+    VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects) {
     pipeline->bind(commandBuffer);
 
     for (auto& obj : gameObjects) {
-        obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.0001f, glm::two_pi<float>());
+        obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.01f, glm::two_pi<float>());
 
         SimplePushConstantData push{};
         push.offset = obj.transform2d.translation;
         push.color = obj.color;
         push.transform = obj.transform2d.mat2();
+
         vkCmdPushConstants(
             commandBuffer,
             pipelineLayout,
