@@ -218,6 +218,7 @@ echo Shaders compiled successfully</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
@@ -229,8 +230,10 @@ echo Shaders compiled successfully</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.hpp" />
+    <ClInclude Include="camera.hpp" />
     <ClInclude Include="device.hpp" />
     <ClInclude Include="game_object.hpp" />
+    <ClInclude Include="keyboard_control.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="renderer.hpp" />
