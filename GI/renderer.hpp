@@ -46,6 +46,6 @@ private:
     std::vector<VkCommandBuffer> commandBuffers;
 
     uint32_t currentImageIndex;
-    int currentFrameIndex{ 0 };
+    int currentFrameIndex;
     bool isFrameStarted{ false };
 };
