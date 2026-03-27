@@ -77,6 +77,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>;D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;D:\Magistr\Diploma\dependencies\tinyobjloader</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,6 +114,7 @@ echo Shaders compiled successfully</Command>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>;D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;D:\Magistr\Diploma\dependencies\tinyobjloader</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +149,7 @@ echo Shaders compiled successfully</Command>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;C:\VulkanSDK\1.4.341.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;C:\VulkanSDK\1.4.341.1\Include;%(AdditionalIncludeDirectories);D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;D:\Magistr\Diploma\dependencies\tinyobjloader</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -186,7 +188,7 @@ echo Shaders compiled successfully</Command>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;C:\VulkanSDK\1.4.341.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;C:\VulkanSDK\1.4.341.1\Include;%(AdditionalIncludeDirectories);D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;D:\Magistr\Diploma\dependencies\tinyobjloader</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -220,6 +222,7 @@ echo Shaders compiled successfully</Command>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="device.cpp" />
+    <ClCompile Include="keyboard_control.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
@@ -239,6 +242,7 @@ echo Shaders compiled successfully</Command>
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="swap_chain.hpp" />
+    <ClInclude Include="utils.hpp" />
     <ClInclude Include="window.hpp" />
   </ItemGroup>
   <ItemGroup>
