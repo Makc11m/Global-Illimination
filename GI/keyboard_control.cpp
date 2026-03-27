@@ -1,19 +1,43 @@
 #include "keyboard_control.hpp"
 
-void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject) {
+void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject) {\
+	double mouseX, mouseY;
+	glfwGetCursorPos(window, &mouseX, &mouseY);
+
+	if (firstMouseInput) {
+		lastMouseX = mouseX;
+		lastMouseY = mouseY;
+		firstMouseInput = false;
+	}
+
+	float xoffset = static_cast<float>(mouseX - lastMouseX);
+	float yoffset = static_cast<float>(lastMouseY - mouseY);
+
+	lastMouseX = mouseX;
+	lastMouseY = mouseY;
+
+	const float sensitivity = 0.0015f;
+
+	gameObject.transform.rotation.y += xoffset * sensitivity;
+	gameObject.transform.rotation.x += yoffset * sensitivity;
+
 	glm::vec3 rotate{0.f};
-	if (glfwGetKey(window, keys.lookLeft) == GLFW_PRESS) {
-		rotate.y -= 1.f;
-	}
-	if (glfwGetKey(window, keys.lookRight) == GLFW_PRESS) {
-		rotate.y += 1.f;
-	}
-	if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) {
-		rotate.x += 1.f;
-	}
-	if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) {
-		rotate.x -= 1.f;
-	}
+
+	rotate.x += xoffset * sensitivity;
+	rotate.y += yoffset * sensitivity;
+
+	//if (glfwGetKey(window, keys.lookLeft) == GLFW_PRESS) {
+	//	rotate.y -= 1.f;
+	//}
+	//if (glfwGetKey(window, keys.lookRight) == GLFW_PRESS) {
+	//	rotate.y += 1.f;
+	//}
+	//if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) {
+	//	rotate.x += 1.f;
+	//}
+	//if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) {
+	//	rotate.x -= 1.f;
+	//}
 
 	if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon()) {
 		gameObject.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
@@ -45,6 +69,9 @@ void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& ga
 	}
 	if (glfwGetKey(window, keys.moveDown) == GLFW_PRESS) {
 		moveDir -= upDir;
+	}
+	if (glfwGetKey(window, keys.quit) == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, true);
 	}
 
 	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
