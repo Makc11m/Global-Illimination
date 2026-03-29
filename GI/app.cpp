@@ -18,14 +18,6 @@
 #include <cassert>
 #include <stdexcept>
 
-struct GlobalUbo {
-	glm::mat4 projection{ 1.f };
-	glm::mat4 view{ 1.f };
-	glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, .02f };
-	glm::vec3 lightPosition = glm::vec3(-1.f, -1.f, -1.f);
-	alignas(16) glm::vec4 lightColor{ 1.f };
-};
-
 Application::Application() {
 	globalPool = 
 		DescriptorPool::Builder(device)
@@ -94,6 +86,8 @@ void Application::run() {
 			GlobalUbo ubo{};	
 			ubo.projection = camera.getProjection();
 			ubo.view = camera.getView();
+			ubo.inverseView = camera.getInverseView();
+			pointLightSystem.update(frameInfo, ubo);
 			uboBuffers[frameIndex]->writeToBuffer(&ubo);
 			uboBuffers[frameIndex]->flush();
 
@@ -132,4 +126,27 @@ void Application::loadGameObjects() {
 	floor.transform.translation = { .0f, .5f, 0.f };
 	floor.transform.scale = { 3.f, 1.f, 3.f };
 	gameObjects.emplace(floor.getId(), std::move(floor));
+
+	//auto pointLight = GameObject::makePointLight(0.2f);
+	//gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+
+	std::vector<glm::vec3> lightColors{
+		{1.f, .1f, .1f},
+		{.1f, .1f, 1.f},
+		{.1f, 1.f, .1f},
+		{1.f, 1.f, .1f},
+		{.1f, 1.f, 1.f},
+		{1.f, 1.f, 1.f}  
+	};
+
+	for (int i = 0; i < lightColors.size(); i++) {
+		auto pointLight = GameObject::makePointLight(0.2f);
+		pointLight.color = lightColors[i];
+		auto rotateLight = glm::rotate(
+			glm::mat4(1.f),
+			(i * glm::two_pi<float>()) / lightColors.size(),
+			{ 0.f, -1.f, 0.f });
+		pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+		gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+	}
 }
