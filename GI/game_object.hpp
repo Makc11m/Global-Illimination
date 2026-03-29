@@ -18,7 +18,7 @@ struct TransformComponent {
 };
 
 struct PointLightComponent {
-    float lightIntensity = 1.f;
+    float lightIntensity = 10.f;
 };
 
 class GameObject {

@@ -37,23 +37,6 @@ glm::mat3 TransformComponent::normalMatrix() {
     const float c1 = glm::cos(rotation.y);
     const float s1 = glm::sin(rotation.y);
 	const  glm::vec3 invScale = 1.f / scale;
-    //return glm::mat3{
-    //    {
-    //        (c1 * c3 + s1 * s2 * s3) / scale.x,
-    //        (c2 * s3) / scale.x,
-    //        (c1 * s2 * s3 - c3 * s1) / scale.x,
-    //    },
-    //    {
-    //        (c3 * s1 * s2 - c1 * s3) / scale.y,
-    //        (c2 * c3) / scale.y,
-    //        (c1 * c3 * s2 + s1 * s3) / scale.y,
-    //    },
-    //    {
-    //        (c2 * s1) / scale.z,
-    //        (-s2) / scale.z,
-    //        (c1 * c2) / scale.z,
-    //    } 
-    //};
     return glm::mat3{
         {
             invScale.x * (c1 * c3 + s1 * s2 * s3),
