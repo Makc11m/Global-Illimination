@@ -1,9 +1,10 @@
 #pragma once
 
+#include "descriptors.hpp"
 #include "device.hpp"
+#include "game_object.hpp"
 #include "renderer.hpp"
 #include "window.hpp"
-#include "game_object.hpp"
 
 // std
 #include <memory>
@@ -29,5 +30,6 @@ private:
 	Device device{ window };
 	Renderer renderer{ window, device };
 
-	std::vector<GameObject> gameObjects;
+	std::unique_ptr<DescriptorPool> globalPool{};
+	GameObject::Map gameObjects;
 };

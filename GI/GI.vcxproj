@@ -222,14 +222,16 @@ echo Shaders compiled successfully</Command>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="descriptors.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="keyboard_control.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pipeline.cpp" />
+    <ClCompile Include="systems\point_light_system.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="simple_render_system.cpp" />
+    <ClCompile Include="systems\simple_render_system.cpp" />
     <ClCompile Include="swap_chain.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -237,6 +239,7 @@ echo Shaders compiled successfully</Command>
     <ClInclude Include="app.hpp" />
     <ClInclude Include="buffer.hpp" />
     <ClInclude Include="camera.hpp" />
+    <ClInclude Include="descriptors.hpp" />
     <ClInclude Include="device.hpp" />
     <ClInclude Include="frame_info.hpp" />
     <ClInclude Include="game_object.hpp" />
@@ -244,41 +247,74 @@ echo Shaders compiled successfully</Command>
     <ClInclude Include="model.hpp" />
     <ClInclude Include="pipeline.hpp" />
     <ClInclude Include="renderer.hpp" />
-    <ClInclude Include="simple_render_system.hpp" />
+    <ClInclude Include="systems\point_light_system.hpp" />
+    <ClInclude Include="systems\simple_render_system.hpp" />
     <ClInclude Include="swap_chain.hpp" />
     <ClInclude Include="utils.hpp" />
     <ClInclude Include="window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="shaders\shader.frag">
+    <CustomBuild Include="shaders\simple_shader.frag">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\frag.spv</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\frag.spv</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\frag.spv</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\frag.spv</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)frag.spv</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)frag.spv</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)frag.spv</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)frag.spv</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fragment shader compile</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Fragment shader compile</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Fragment shader compile</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Fragment shader compile</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\simple_frag.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\simple_frag.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\simple_frag.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.frag -o D:\Magistr\Diploma\GI\GI\shaders\simple_frag.spv</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)simple_frag.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)simple_frag.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)simple_frag.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)simple_frag.spv</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fragment simple shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Fragment simple shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Fragment simple shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Fragment simple shader compile</Message>
     </CustomBuild>
-    <CustomBuild Include="shaders\shader.vert">
+    <CustomBuild Include="shaders\simple_shader.vert">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\vert.spv</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\vert.spv</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\vert.spv</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\vert.spv</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)vert.spv</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)vert.spv</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)vert.spv</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)vert.spv</Outputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex shader compile</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex shader compile</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex shader compile</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex shader compile</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\simple_vert.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\simple_vert.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\simple_vert.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\simple_shader.vert -o D:\Magistr\Diploma\GI\GI\shaders\simple_vert.spv</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)simple_vert.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)simple_vert.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)simple_vert.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)simple_vert.spv</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex simple shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex simple shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex simple shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex simple shader compile</Message>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="shaders\point_light.frag">
+      <FileType>Document</FileType>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)point_light_frag.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)point_light_frag.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)point_light_frag.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)point_light_frag.spv</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.frag -o D:\Magistr\Diploma\GI\GI\shaders\point_light_frag.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.frag -o D:\Magistr\Diploma\GI\GI\shaders\point_light_frag.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.frag -o D:\Magistr\Diploma\GI\GI\shaders\point_light_frag.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.frag -o D:\Magistr\Diploma\GI\GI\shaders\point_light_frag.spv</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fragment point light shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Fragment point light shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Fragment point light shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Fragment point light shader compile</Message>
+    </CustomBuild>
+    <CustomBuild Include="shaders\point_light.vert">
+      <FileType>Document</FileType>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)point_light_vert.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)point_light_vert.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)point_light_vert.spv</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)point_light_vert.spv</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.vert -o D:\Magistr\Diploma\GI\GI\shaders\point_light_vert.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.vert -o D:\Magistr\Diploma\GI\GI\shaders\point_light_vert.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.vert -o D:\Magistr\Diploma\GI\GI\shaders\point_light_vert.spv</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\VulkanSDK\1.4.341.1\Bin\glslc.exe D:\Magistr\Diploma\GI\GI\shaders\point_light.vert -o D:\Magistr\Diploma\GI\GI\shaders\point_light_vert.spv</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex point light shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex point light shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex point light shader compile</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex point light shader compile</Message>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

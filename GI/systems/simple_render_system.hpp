@@ -1,10 +1,10 @@
 #pragma once
 
-#include "device.hpp"
-#include "game_object.hpp"
-#include "pipeline.hpp"
-#include "camera.hpp"
-#include "frame_info.hpp"
+#include "../device.hpp"
+#include "../game_object.hpp"
+#include "../pipeline.hpp"
+#include "../camera.hpp"
+#include "../frame_info.hpp"
 
 // std
 #include <memory>
@@ -12,16 +12,16 @@
 
 class SimpleRenderSystem {
 public:
-	SimpleRenderSystem(Device& device, VkRenderPass renderPass);
+	SimpleRenderSystem(Device& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 	~SimpleRenderSystem();
 
 	SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 	SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-	void renderGameObjects(FrameInfo& frameInfo, std::vector<GameObject>& gameObjects);
+	void renderGameObjects(FrameInfo& frameInfo);
 
 private:
-	void createPipelineLayout();
+	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 	void createPipeline(VkRenderPass renderPass);
 
 	Device& device;

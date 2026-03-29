@@ -6,6 +6,7 @@
 
 // std
 #include <memory>
+#include <unordered_map>
 
 struct TransformComponent {
     glm::vec3 translation{};  // (position offset)
@@ -19,6 +20,7 @@ struct TransformComponent {
 class GameObject {
 public:
     using id_t = unsigned int;
+	using Map = std::unordered_map<id_t, GameObject>;
 
     static GameObject createGameObject() {
         static id_t currentId = 0;
