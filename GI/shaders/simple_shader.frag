@@ -34,8 +34,8 @@ void main() {
     vec3 viewDirection = normalize(cameraPosWorld - fragPosWorld);
 
     float constant = 1.0;
-    float linear = 0.09;
-    float quadratic = 0.032;
+    float linear = 0.001;
+    float quadratic = 0.06;
 
     for (int i = 0; i < ubo.numLights; i++) {
         PointLight light = ubo.pointLights[i];
@@ -52,7 +52,7 @@ void main() {
         if (cosAngIncedence > 0.0) {
             vec3 halfAngle = normalize(directionToLight + viewDirection);
             float blinnTerm = max(dot(surfaceNormal, halfAngle), 0.0);
-            blinnTerm = pow(blinnTerm, 100);
+            blinnTerm = pow(blinnTerm, 300);
             specularLight += intensity * blinnTerm;
         }
     }

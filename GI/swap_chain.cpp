@@ -27,6 +27,7 @@ void SwapChain::init() {
     createRenderPass();
     createDepthResources();
     createFramebuffers();
+    //createShadowResources();
     createSyncObjects();
 }
 
@@ -341,6 +342,105 @@ void SwapChain::createDepthResources() {
         }
     }
 }
+
+//void SwapChain::createShadowResources() {
+//    // 1. Shadow map image
+//    VkImageCreateInfo imageInfo{};
+//    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+//    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+//    imageInfo.extent.width = shadowMapWidth_val;
+//    imageInfo.extent.height = shadowMapHeight_val;
+//    imageInfo.extent.depth = 1;
+//    imageInfo.mipLevels = 1;
+//    imageInfo.arrayLayers = 1;
+//    imageInfo.format = VK_FORMAT_D16_UNORM;
+//    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+//    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+//    imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+//    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+//    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+//
+//    device.createImageWithInfo(
+//        imageInfo,
+//        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+//        shadowImage,
+//        shadowImageMemory
+//    );
+//
+//    // 2. Image view
+//    VkImageViewCreateInfo viewInfo{};
+//    viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+//    viewInfo.image = shadowImage;
+//    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+//    viewInfo.format = VK_FORMAT_D16_UNORM;
+//    viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+//    viewInfo.subresourceRange.baseMipLevel = 0;
+//    viewInfo.subresourceRange.levelCount = 1;
+//    viewInfo.subresourceRange.baseArrayLayer = 0;
+//    viewInfo.subresourceRange.layerCount = 1;
+//
+//    if (vkCreateImageView(device.device(), &viewInfo, nullptr, &shadowImageView) != VK_SUCCESS)
+//        throw std::runtime_error("failed to create shadow map image view");
+//
+//    // 3. Render pass
+//    VkAttachmentDescription depthAttachment{};
+//    depthAttachment.format = VK_FORMAT_D16_UNORM;
+//    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+//    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+//    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+//    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+//    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+//    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+//    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+//
+//    VkAttachmentReference depthRef{};
+//    depthRef.attachment = 0;
+//    depthRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+//
+//    VkSubpassDescription subpass{};
+//    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+//    subpass.colorAttachmentCount = 0; // только глубина
+//    subpass.pDepthStencilAttachment = &depthRef;
+//
+//    VkRenderPassCreateInfo renderPassInfo{};
+//    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+//    renderPassInfo.attachmentCount = 1;
+//    renderPassInfo.pAttachments = &depthAttachment;
+//    renderPassInfo.subpassCount = 1;
+//    renderPassInfo.pSubpasses = &subpass;
+//
+//    if (vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &shadowRenderPass) != VK_SUCCESS)
+//        throw std::runtime_error("failed to create shadow render pass");
+//
+//    // 4. Framebuffer
+//    VkFramebufferCreateInfo fbInfo{};
+//    fbInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+//    fbInfo.renderPass = shadowRenderPass;
+//    fbInfo.attachmentCount = 1;
+//    fbInfo.pAttachments = &shadowImageView;
+//    fbInfo.width = shadowMapWidth_val;
+//    fbInfo.height = shadowMapHeight_val;
+//    fbInfo.layers = 1;
+//
+//    if (vkCreateFramebuffer(device.device(), &fbInfo, nullptr, &shadowFramebuffer) != VK_SUCCESS)
+//        throw std::runtime_error("failed to create shadow framebuffer");
+//
+//    // 5. Sampler для использования shadow map в шейдере
+//    VkSamplerCreateInfo samplerInfo{};
+//    samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+//    samplerInfo.magFilter = VK_FILTER_LINEAR;
+//    samplerInfo.minFilter = VK_FILTER_LINEAR;
+//    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+//    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+//    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+//    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+//    samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+//    samplerInfo.minLod = 0.0f;
+//    samplerInfo.maxLod = 1.0f;
+//
+//    if (vkCreateSampler(device.device(), &samplerInfo, nullptr, &shadowSampler) != VK_SUCCESS)
+//        throw std::runtime_error("failed to create shadow sampler");
+//}
 
 void SwapChain::createSyncObjects() {
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);

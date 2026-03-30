@@ -18,6 +18,7 @@ public:
     Renderer& operator=(const Renderer&) = delete;
 
     VkRenderPass getSwapChainRenderPass() const { return swapChain->getRenderPass(); }
+    VkRenderPass getSwapChainShadowPass() const { return swapChain->getShadowRenderPass(); }
 	float getAspectRatio() const { return swapChain->extentAspectRatio(); }
     bool isFrameInProgress() const { return isFrameStarted; }
 
@@ -35,6 +36,8 @@ public:
     void endFrame();
     void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
     void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
+    void beginSwapChainShadowPass(VkCommandBuffer commandBuffer);
+    void endSwapChainShadowPass(VkCommandBuffer commandBuffer);
 
 private:
     void createCommandBuffers();

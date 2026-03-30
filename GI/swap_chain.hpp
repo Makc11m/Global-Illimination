@@ -22,13 +22,17 @@ public:
     SwapChain &operator=(const SwapChain&) = delete;
 
     VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
+    VkFramebuffer getShadowFramebuffer() { return shadowFramebuffer; }
     VkRenderPass getRenderPass() { return renderPass; }
+    VkRenderPass getShadowRenderPass() { return shadowRenderPass; }
     VkImageView getImageView(int index) { return swapChainImageViews[index]; }
     size_t imageCount() { return swapChainImages.size(); }
     VkFormat getSwapChainImageFormat() { return swapChainImageFormat; }
     VkExtent2D getSwapChainExtent() { return swapChainExtent; }
     uint32_t width() { return swapChainExtent.width; }
+    uint32_t shadowMapWidth() { return shadowMapWidth_val; }
     uint32_t height() { return swapChainExtent.height; }
+    uint32_t shadowMapHeight() { return shadowMapHeight_val; }
 
     float extentAspectRatio() {
         return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
@@ -52,6 +56,8 @@ private:
     void createFramebuffers();
     void createSyncObjects();
 
+    void createShadowResources();
+
     // Helper functions
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(
         const std::vector<VkSurfaceFormatKHR>& availableFormats);
@@ -71,6 +77,15 @@ private:
     std::vector<VkImageView> depthImageViews;
     std::vector<VkImage> swapChainImages;
     std::vector<VkImageView> swapChainImageViews;
+
+    VkRenderPass shadowRenderPass;
+    VkFramebuffer shadowFramebuffer;
+    VkImage shadowImage;
+    VkDeviceMemory shadowImageMemory;
+    VkImageView shadowImageView;
+    VkSampler shadowSampler;
+    uint32_t shadowMapWidth_val = 2048;
+    uint32_t shadowMapHeight_val = 2048;
 
     Device& device;
     VkExtent2D windowExtent;

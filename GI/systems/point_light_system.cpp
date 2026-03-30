@@ -64,7 +64,7 @@ void PointLightSystem::createPipeline(VkRenderPass renderPass) {
 }
 
 void PointLightSystem::update(FrameInfo& frameInfo, GlobalUbo& ubo) {
-    auto rotateLight = glm::rotate(glm::mat4(1.f), frameInfo.frameTime / 50, { 0.f, -1.f, 0.f }); 
+    auto rotateLight = glm::rotate(glm::mat4(1.f), frameInfo.frameTime / 7, { 0.f, -1.f, 0.f }); 
 	int lightIndex = 0;
     for (auto& kv : frameInfo.gameObjects) {
         auto& obj = kv.second;
@@ -103,6 +103,7 @@ void PointLightSystem::render(FrameInfo& frameInfo) {
 
 		PointLightPushConstants push{};
 		push.position = glm::vec4(obj.transform.translation, 1.f);
+        obj.pointLight->lightIntensity = glm::clamp(obj.pointLight->lightIntensity, 0.f, 100.f);
 		push.color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
 		push.radius = obj.transform.scale.x;
 

@@ -17,9 +17,14 @@ public:
         int lookUp = GLFW_KEY_UP;
         int lookDown = GLFW_KEY_DOWN;
         int quit = GLFW_KEY_ESCAPE;
+		int lightUp = GLFW_KEY_UP;
+		int lightDown = GLFW_KEY_DOWN;
+		int lightLeft = GLFW_KEY_LEFT;
+		int lightRight = GLFW_KEY_RIGHT;
     };
 
 	void moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject);
+	void changeLight(GLFWwindow* window, float dt, GameObject& gameObject);
 
     KeyMappings keys{};
     float moveSpeed{3.f};
