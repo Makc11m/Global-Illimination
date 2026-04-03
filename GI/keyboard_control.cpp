@@ -1,6 +1,11 @@
 #include "keyboard_control.hpp"
 
-void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject) {
+#include <iostream>
+#include <unordered_map>
+
+static std::unordered_map<int, bool> keyWasPressed;
+
+void KeyboardControl::changeCameraView(GLFWwindow* window, float dt, GameObject& gameObject) {
 	double mouseX, mouseY;
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 
@@ -21,7 +26,7 @@ void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& ga
 	gameObject.transform.rotation.y += xoffset * sensitivity;
 	gameObject.transform.rotation.x += yoffset * sensitivity;
 
-	glm::vec3 rotate{0.f};
+	glm::vec3 rotate{ 0.f };
 
 	rotate.x += xoffset * sensitivity;
 	rotate.y += yoffset * sensitivity;
@@ -32,6 +37,9 @@ void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& ga
 
 	gameObject.transform.rotation.x = glm::clamp(gameObject.transform.rotation.x, -1.5f, 1.5f);
 	gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y, glm::two_pi<float>());
+}
+
+void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject) {
 
 	float yaw = gameObject.transform.rotation.y;
 	const glm::vec3 forwardDir{ sin(yaw), 0.f, cos(yaw) };
@@ -63,5 +71,35 @@ void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& ga
 	
 	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
 		gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
+	}
+}
+
+bool isKeyPressedOnce(GLFWwindow* window, int key) {
+	bool isPressedNow = glfwGetKey(window, key) == GLFW_PRESS;
+	bool pressedOnce = isPressedNow && !keyWasPressed[key];
+	keyWasPressed[key] = isPressedNow;
+	return pressedOnce;
+}
+
+void KeyboardControl::changeVisibleCursor(GLFWwindow* window) {
+	if (isKeyPressedOnce(window, GLFW_KEY_V)) {
+		int mode = glfwGetInputMode(window, GLFW_CURSOR);
+		if (mode == GLFW_CURSOR_NORMAL) {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			double mouseX, mouseY;
+			glfwGetCursorPos(window, &mouseX, &mouseY);
+			std::cout << "X pos = "  << mouseX << " Y pos = " << mouseY << std::endl;
+			lastMouseX = mouseX;
+			lastMouseY = mouseY;
+		}
+		else {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			double mouseX, mouseY;
+			glfwGetCursorPos(window, &mouseX, &mouseY);
+			lastMouseX = mouseX;
+			lastMouseY = mouseY;
+			std::cout << "X pos = " << mouseX << " Y pos = " << mouseY << std::endl;
+		}
+		firstMouseInput = false;
 	}
 }

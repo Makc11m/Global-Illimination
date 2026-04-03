@@ -100,7 +100,7 @@ void Application::run() {
 	auto viewerObject = GameObject::createGameObject();
 	viewerObject.transform.translation = { 0.f, -0.5f, -5.5f };
 	KeyboardControl cameraControl{};
-
+	KeyboardControl windowControl{};
 	auto currentTime = std::chrono::high_resolution_clock::now();
 
     while (!window.shouldClose()) {
@@ -109,8 +109,11 @@ void Application::run() {
 		auto newTime = std::chrono::high_resolution_clock::now();
 		float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 		currentTime = newTime;
-
+		windowControl.changeVisibleCursor(window.getGLFWwindow());
 		cameraControl.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+		if (glfwGetInputMode(window.getGLFWwindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+			cameraControl.changeCameraView(window.getGLFWwindow(), frameTime, viewerObject);
+		}
 		camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
 		float aspect = renderer.getAspectRatio();
@@ -149,9 +152,14 @@ void Application::run() {
 			ImGui_ImplVulkan_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
-
-			ImGui::Begin("Scene");
-			ImGui::End();
+			static bool uiActive = true; 
+			if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_TAB) == GLFW_REPEAT) {
+				uiActive = !uiActive;
+			}
+			if (uiActive) {
+				ImGui::Begin("Scene");
+				ImGui::End();
+			}
 
             simpleRenderSystem.renderGameObjects(frameInfo);
 			pointLightSystem.render(frameInfo);

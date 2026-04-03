@@ -24,6 +24,8 @@ public:
     };
 
 	void moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject);
+    void changeVisibleCursor(GLFWwindow* window);
+    void changeCameraView(GLFWwindow* window, float dt, GameObject& gameObject);
 
     KeyMappings keys{};
     float moveSpeed{3.f};

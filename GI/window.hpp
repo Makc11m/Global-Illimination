@@ -17,6 +17,7 @@ public:
 	bool wasWindowResized() { return framebufferResized; }
 	void resetWindowResizedFlag() { framebufferResized = false; }
 	GLFWwindow* getGLFWwindow() const { return window; }
+	bool getVisibleCursor() const { return visibleCursor; }
 
 	void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
@@ -27,6 +28,7 @@ private:
 	int width;
 	int height;
 	bool framebufferResized = false;
+	bool visibleCursor = true;
 
 	std::string windowName;
 	GLFWwindow* window;
