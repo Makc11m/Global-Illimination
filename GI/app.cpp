@@ -17,6 +17,7 @@
 #include <chrono>
 #include <cassert>
 #include <stdexcept>
+#include <typeinfo>
 
 Application::Application() {
 	globalPool = 
@@ -126,21 +127,6 @@ void Application::run() {
 		float aspect = renderer.getAspectRatio();
 		camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
-
-		//if (auto it = gameObjects.find(controlledLightId); it != gameObjects.end() && it->second.pointLight) {
-		//	auto& light = it->second.pointLight;
-
-		//	const float delta = 0.5f * frameTime;
-		//	if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_UP) == GLFW_PRESS) {
-		//		light->lightIntensity += delta;
-		//	}
-		//	if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-		//		light->lightIntensity -= delta;
-		//	}
-
-		//	light->lightIntensity = glm::clamp(light->lightIntensity, 0.f, 8.f);
-		//}
-
         if (auto commandBuffer = renderer.beginFrame()) {
 			int frameIndex = renderer.getFrameIndex();
 			FrameInfo frameInfo{ frameIndex, frameTime, commandBuffer, camera, globalDescriptorSets[frameIndex], gameObjects};
@@ -172,7 +158,9 @@ void Application::run() {
 				for (auto lightId : lightsId) {
 					auto it = gameObjects.find(lightId);
 					auto& light = it->second.pointLight;
-					ImGui::SliderFloat("Change light intensity", &light->lightIntensity, 0.0f, 3.0f);
+					std::string label = "Light intensity " + std::to_string(lightId);
+					ImGui::SliderFloat(label.c_str(), &light->lightIntensity, 0.0f, 3.0f);
+					ImGui::SliderFloat3("Rotation", &it->second.transform.translation.x, -5.0f, 5.0f);
 				}
 				ImGui::PopItemWidth();
 				ImGui::End();
