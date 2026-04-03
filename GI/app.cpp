@@ -98,18 +98,25 @@ void Application::run() {
     camera.setViewTarget(glm::vec3(-1.f, -1.f, 2.f), glm::vec3(0.0f, 0.0f, 2.5f));
 
 	auto viewerObject = GameObject::createGameObject();
+
 	viewerObject.transform.translation = { 0.f, -0.5f, -5.5f };
 	KeyboardControl cameraControl{};
-	KeyboardControl windowControl{};
 	auto currentTime = std::chrono::high_resolution_clock::now();
-
+	//
+	std::vector<GameObject::id_t> lightsId{};
+	for (auto& [id, obj] : gameObjects) {
+		if (obj.pointLight != nullptr) {
+			lightsId.push_back(obj.getId());
+		}
+	}
     while (!window.shouldClose()) {
         glfwPollEvents();
 
 		auto newTime = std::chrono::high_resolution_clock::now();
 		float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
 		currentTime = newTime;
-		windowControl.changeVisibleCursor(window.getGLFWwindow());
+		ImGuiIO& io = ImGui::GetIO();
+		cameraControl.changeVisibleCursor(window.getGLFWwindow());
 		cameraControl.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
 		if (glfwGetInputMode(window.getGLFWwindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
 			cameraControl.changeCameraView(window.getGLFWwindow(), frameTime, viewerObject);
@@ -119,19 +126,20 @@ void Application::run() {
 		float aspect = renderer.getAspectRatio();
 		camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
-		if (auto it = gameObjects.find(controlledLightId); it != gameObjects.end() && it->second.pointLight) {
-			auto& light = it->second.pointLight;
 
-			const float delta = 0.5f * frameTime; 
-			if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_UP) == GLFW_PRESS) {
-				light->lightIntensity += delta;
-			}
-			if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-				light->lightIntensity -= delta;
-			}
+		//if (auto it = gameObjects.find(controlledLightId); it != gameObjects.end() && it->second.pointLight) {
+		//	auto& light = it->second.pointLight;
 
-			light->lightIntensity = glm::clamp(light->lightIntensity, 0.f, 8.f);
-		}
+		//	const float delta = 0.5f * frameTime;
+		//	if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_UP) == GLFW_PRESS) {
+		//		light->lightIntensity += delta;
+		//	}
+		//	if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_DOWN) == GLFW_PRESS) {
+		//		light->lightIntensity -= delta;
+		//	}
+
+		//	light->lightIntensity = glm::clamp(light->lightIntensity, 0.f, 8.f);
+		//}
 
         if (auto commandBuffer = renderer.beginFrame()) {
 			int frameIndex = renderer.getFrameIndex();
@@ -153,11 +161,20 @@ void Application::run() {
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 			static bool uiActive = true; 
-			if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_TAB) == GLFW_REPEAT) {
+			if (cameraControl.isKeyPressedOnce(window.getGLFWwindow(), GLFW_KEY_TAB)) {
 				uiActive = !uiActive;
 			}
 			if (uiActive) {
 				ImGui::Begin("Scene");
+				ImGui::Text("FPS: %.1f", 1.0f / frameTime);
+				ImGui::PushItemWidth(250);
+				ImGui::DragFloat3("Change camera position", &viewerObject.transform.translation.x, 0.1f);
+				for (auto lightId : lightsId) {
+					auto it = gameObjects.find(lightId);
+					auto& light = it->second.pointLight;
+					ImGui::SliderFloat("Change light intensity", &light->lightIntensity, 0.0f, 3.0f);
+				}
+				ImGui::PopItemWidth();
 				ImGui::End();
 			}
 
@@ -272,7 +289,6 @@ void Application::loadGameObjects() {
 
 	for (int i = 0; i < lightColors.size(); i++) {
 		auto pointLight = GameObject::makePointLight(.5f);
-		controlledLightId = pointLight.getId();
 		pointLight.color = lightColors[i];
 		auto rotateLight = glm::rotate(
 			glm::mat4(1.f),

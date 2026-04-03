@@ -27,7 +27,6 @@ void SwapChain::init() {
     createRenderPass();
     createDepthResources();
     createFramebuffers();
-    //createShadowResources();
     createSyncObjects();
 }
 

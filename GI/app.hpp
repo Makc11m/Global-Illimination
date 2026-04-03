@@ -16,8 +16,8 @@
 
 class Application {
 public:
-	static constexpr int WIDTH = 1200;
-	static constexpr int HEIGHT = 800;
+	static constexpr int WIDTH = 1920;
+	static constexpr int HEIGHT = 1080;
 
 	Application();
 	~Application();
@@ -40,5 +40,5 @@ private:
 
 	std::unique_ptr<DescriptorPool> globalPool{};
 	GameObject::Map gameObjects;
-	GameObject::id_t controlledLightId{};
+	//GameObject::id_t controlledLightId{};
 };
