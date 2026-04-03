@@ -150,6 +150,7 @@ echo Shaders compiled successfully</Command>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;C:\VulkanSDK\1.4.341.1\Include;%(AdditionalIncludeDirectories);D:\Magistr\Diploma\dependencies\tinyobjloader</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -189,6 +190,7 @@ echo Shaders compiled successfully</Command>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>D:\Magistr\Diploma\dependencies\glm;D:\Magistr\Diploma\dependencies\glfw-3.4\include;C:\VulkanSDK\1.4.341.1\Include;%(AdditionalIncludeDirectories);D:\Magistr\Diploma\dependencies\tinyobjloader</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -224,6 +226,12 @@ echo Shaders compiled successfully</Command>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="descriptors.cpp" />
     <ClCompile Include="device.cpp" />
+    <ClCompile Include="extentions\ImGUI\imgui.cpp" />
+    <ClCompile Include="extentions\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="extentions\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="extentions\ImGUI\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="extentions\ImGUI\imgui_tables.cpp" />
+    <ClCompile Include="extentions\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="keyboard_control.cpp" />
     <ClCompile Include="main.cpp" />
@@ -241,6 +249,14 @@ echo Shaders compiled successfully</Command>
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="descriptors.hpp" />
     <ClInclude Include="device.hpp" />
+    <ClInclude Include="extentions\ImGUI\imconfig.h" />
+    <ClInclude Include="extentions\ImGUI\imgui.h" />
+    <ClInclude Include="extentions\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="extentions\ImGUI\imgui_impl_vulkan.h" />
+    <ClInclude Include="extentions\ImGUI\imgui_internal.h" />
+    <ClInclude Include="extentions\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="extentions\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="extentions\ImGUI\imstb_truetype.h" />
     <ClInclude Include="frame_info.hpp" />
     <ClInclude Include="game_object.hpp" />
     <ClInclude Include="keyboard_control.hpp" />

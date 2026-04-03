@@ -76,6 +76,7 @@ VkCommandBuffer Renderer::beginFrame() {
     auto commandBuffer = getCurrentCommandBuffer();
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
     if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
         throw std::runtime_error("failed to begin recording command buffer!");
@@ -138,38 +139,6 @@ void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 }
 
-//void Renderer::beginSwapChainShadowPass(VkCommandBuffer commandBuffer) {
-//    assert(isFrameStarted && "Can't call beginSwapChainShadowPass if frame is not in progress");
-//    assert(
-//        commandBuffer == getCurrentCommandBuffer() &&
-//        "Can't begin render pass on command buffer from a different frame");
-//
-//    VkRenderPassBeginInfo shadowPassInfo{};
-//    shadowPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-//    shadowPassInfo.renderPass = swapChain->getShadowRenderPass();
-//    shadowPassInfo.framebuffer = swapChain->getShadowFramebuffer();
-//    shadowPassInfo.renderArea.offset = { 0, 0 };
-//    shadowPassInfo.renderArea.extent = { swapChain->shadowMapWidth(), swapChain->shadowMapHeight() };
-//
-//    VkClearValue clearValue{};
-//    clearValue.depthStencil = { 1.0f, 0 };
-//    shadowPassInfo.clearValueCount = 1;
-//    shadowPassInfo.pClearValues = &clearValue;
-//
-//    vkCmdBeginRenderPass(commandBuffer, &shadowPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-//
-//    VkViewport viewport{};
-//    viewport.x = 0.0f;
-//    viewport.y = 0.0f;
-//    viewport.width = static_cast<float>(swapChain->shadowMapWidth());
-//    viewport.height = static_cast<float>(swapChain->shadowMapHeight());
-//    viewport.minDepth = 0.0f;
-//    viewport.maxDepth = 1.0f;
-//    VkRect2D scissor{ {0, 0}, {swapChain->shadowMapWidth(), swapChain->shadowMapHeight()} };
-//    vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-//    vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-//}
-
 
 void Renderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
     assert(isFrameStarted && "Can't call endSwapChainRenderPass if frame is not in progress");
@@ -178,11 +147,3 @@ void Renderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
         "Can't end render pass on command buffer from a different frame");
     vkCmdEndRenderPass(commandBuffer);
 }
-
-//void Renderer::endSwapChainShadowPass(VkCommandBuffer commandBuffer) {
-//    assert(isFrameStarted && "Can't call endSwapChainRenderPass if frame is not in progress");
-//    assert(
-//        commandBuffer == getCurrentCommandBuffer() &&
-//        "Can't end render pass on command buffer from a different frame");
-//    vkCmdEndRenderPass(commandBuffer);
-//}

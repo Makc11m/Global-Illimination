@@ -5,6 +5,10 @@
 #include "game_object.hpp"
 #include "renderer.hpp"
 #include "window.hpp"
+#include "extentions/ImGUI/imgui.h"
+#include "extentions/ImGUI/imgui_impl_glfw.h"
+#include "extentions/ImGUI/imgui_impl_vulkan.h"
+
 
 // std
 #include <memory>
@@ -24,9 +28,11 @@ public:
 	void run();
 
 private:
+	void initImGui();
 	void loadGameObjects();
 
-	Window window{ WIDTH, HEIGHT, "Hello Vulkan!" };
+	VkDescriptorPool imguiPool;
+	Window window{ WIDTH, HEIGHT, "GI" };
 	Device device{ window };
 	Renderer renderer{ window, device };
 

@@ -65,18 +65,3 @@ void KeyboardControl::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& ga
 		gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
 	}
 }
-
-void KeyboardControl::changeLight(GLFWwindow* window, float dt, GameObject& gameObject) {
-	if (glfwGetKey(window, keys.lightUp) == GLFW_PRESS) {
-		gameObject.pointLight->lightIntensity += 0.5f * dt;
-	}
-	if (glfwGetKey(window, keys.lightDown) == GLFW_PRESS) {
-		gameObject.pointLight->lightIntensity -= 0.5f * dt;
-	}
-	if (glfwGetKey(window, keys.lightUp) == GLFW_PRESS) {
-		gameObject.pointLight->lightIntensity += 0.5f * dt;
-	}
-	if (glfwGetKey(window, keys.lightDown) == GLFW_PRESS) {
-		gameObject.pointLight->lightIntensity -= 0.5f * dt;
-	}
-}

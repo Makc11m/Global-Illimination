@@ -25,9 +25,45 @@ Application::Application() {
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
 			.build();
     loadGameObjects();
+
+	initImGui();
 }
 
 Application::~Application() {}
+
+void Application::initImGui() {
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+
+	// --- GLFW ---
+	ImGui_ImplGlfw_InitForVulkan(window.getGLFWwindow(), true);
+
+	// --- Descriptor Pool ---
+	std::array<VkDescriptorPoolSize, 1> poolSizes = { {
+		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 }
+	} };
+
+	VkDescriptorPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.maxSets = 1000;
+	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+	poolInfo.pPoolSizes = poolSizes.data();
+
+	vkCreateDescriptorPool(device.device(), &poolInfo, nullptr, &imguiPool);
+
+	// --- Vulkan ---
+	ImGui_ImplVulkan_InitInfo initInfo{};
+	initInfo.Instance = device.getInstance();
+	initInfo.PhysicalDevice = device.getPhysicalDevice();
+	initInfo.Device = device.device();
+	initInfo.Queue = device.graphicsQueue();
+	initInfo.DescriptorPool = imguiPool;
+	initInfo.MinImageCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
+	initInfo.ImageCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
+	initInfo.PipelineInfoMain.RenderPass = renderer.getSwapChainRenderPass();
+	ImGui_ImplVulkan_Init(&initInfo);	
+}
 
 void Application::run() {
 	std::vector<std::unique_ptr<Buffer>> uboBuffers(SwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -43,27 +79,20 @@ void Application::run() {
 
 	auto globalSetLayout = DescriptorSetLayout::Builder(device)
 		.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-		//.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 		.build();
 
 	std::vector<VkDescriptorSet> globalDescriptorSets(SwapChain::MAX_FRAMES_IN_FLIGHT);
 
-	//VkDescriptorImageInfo shadowMapInfo{};
-	//shadowMapInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-	//shadowMapInfo.imageView = shadowRenderSystem.getShadowMapView();
-	//shadowMapInfo.sampler = shadowRenderSystem.getShadowSampler();
 
 	for (int i = 0; i < globalDescriptorSets.size(); i++) {
 		auto bufferInfo = uboBuffers[i]->descriptorInfo();
 		DescriptorWriter(*globalSetLayout, *globalPool)
 			.writeBuffer(0, &bufferInfo)
-			//.writeImage(1, &shadowMapInfo)
 			.build(globalDescriptorSets[i]);
 	}
 
 	SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
 	PointLightSystem pointLightSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
-	//ShadowRenderSystem shadowRenderSystem{ device, renderer.getSwapChainShadowPass() }; // <-- новая система
 
 	Camera camera{};
     camera.setViewTarget(glm::vec3(-1.f, -1.f, 2.f), glm::vec3(0.0f, 0.0f, 2.5f));
@@ -90,7 +119,7 @@ void Application::run() {
 		if (auto it = gameObjects.find(controlledLightId); it != gameObjects.end() && it->second.pointLight) {
 			auto& light = it->second.pointLight;
 
-			const float delta = 0.5f * frameTime; // скорость изменения яркости
+			const float delta = 0.5f * frameTime; 
 			if (glfwGetKey(window.getGLFWwindow(), GLFW_KEY_UP) == GLFW_PRESS) {
 				light->lightIntensity += delta;
 			}
@@ -98,7 +127,6 @@ void Application::run() {
 				light->lightIntensity -= delta;
 			}
 
-			// ограничим диапазон, чтобы не уходило в минус
 			light->lightIntensity = glm::clamp(light->lightIntensity, 0.f, 8.f);
 		}
 
@@ -117,8 +145,20 @@ void Application::run() {
 
 			//render
 			renderer.beginSwapChainRenderPass(commandBuffer);
+			//ImGUI
+			ImGui_ImplVulkan_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+
+			ImGui::Begin("Scene");
+			ImGui::End();
+
             simpleRenderSystem.renderGameObjects(frameInfo);
 			pointLightSystem.render(frameInfo);
+
+			ImGui::Render();
+			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
+
 			renderer.endSwapChainRenderPass(commandBuffer);
 
 			renderer.endFrame();

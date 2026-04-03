@@ -24,7 +24,6 @@ public:
     };
 
 	void moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject);
-	void changeLight(GLFWwindow* window, float dt, GameObject& gameObject);
 
     KeyMappings keys{};
     float moveSpeed{3.f};
