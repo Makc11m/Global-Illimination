@@ -40,5 +40,4 @@ private:
 
 	std::unique_ptr<DescriptorPool> globalPool{};
 	GameObject::Map gameObjects;
-	//GameObject::id_t controlledLightId{};
 };

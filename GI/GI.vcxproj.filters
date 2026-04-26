@@ -158,5 +158,7 @@
     <CustomBuild Include="shaders\simple_shader.vert" />
     <CustomBuild Include="shaders\point_light.frag" />
     <CustomBuild Include="shaders\point_light.vert" />
+    <CustomBuild Include="shaders\pbr.vert" />
+    <CustomBuild Include="shaders\pbr.frag" />
   </ItemGroup>
 </Project>

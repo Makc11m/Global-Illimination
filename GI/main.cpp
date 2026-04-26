@@ -20,10 +20,10 @@ int main() {
         return EXIT_FAILURE;
     }
     std::vector<std::string> filenames = {
-        "shaders/simple_vert.spv",
-        "shaders/simple_frag.spv",
-        "shaders/point_light_frag.spv",
-        "shaders/point_light_vert.spv"
+        "shaders/simple_shader.vert.spv",
+        "shaders/simple_shader.frag.spv",
+        "shaders/point_light.frag.spv",
+        "shaders/point_light.vert.spv"
     };
 
 	for (const auto& filename : filenames) {

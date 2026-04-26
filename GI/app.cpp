@@ -24,6 +24,7 @@ Application::Application() {
 		DescriptorPool::Builder(device)
 			.setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT)
 			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
+			.addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, SwapChain::MAX_FRAMES_IN_FLIGHT)
 			.build();
     loadGameObjects();
 
@@ -77,9 +78,13 @@ void Application::run() {
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 		uboBuffers[i]->map();
 	}
+	auto textureImage = std::make_unique<Image>(device, "models/texture/vladik.jpg");
+
+
 
 	auto globalSetLayout = DescriptorSetLayout::Builder(device)
 		.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+		.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 		.build();
 
 	std::vector<VkDescriptorSet> globalDescriptorSets(SwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -87,8 +92,11 @@ void Application::run() {
 
 	for (int i = 0; i < globalDescriptorSets.size(); i++) {
 		auto bufferInfo = uboBuffers[i]->descriptorInfo();
+		auto imageInfo = textureImage->descriptorInfo();
+
 		DescriptorWriter(*globalSetLayout, *globalPool)
 			.writeBuffer(0, &bufferInfo)
+			.writeImage(1, &imageInfo)
 			.build(globalDescriptorSets[i]);
 	}
 
